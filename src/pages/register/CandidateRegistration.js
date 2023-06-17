@@ -1,9 +1,12 @@
 import React, { useEffect, useState } from "react";
 import { useForm, useWatch } from "react-hook-form";
-import { useNavigate } from "react-router-dom";
 import { FaChevronLeft } from "react-icons/fa";
+import { useSelector } from "react-redux";
+import { useNavigate } from "react-router-dom";
+import { useRegisterMutation } from "../../features/api/apiSlice";
 
 const CandidateRegistration = () => {
+  const { user: { email } } = useSelector(state => state.auth);
   const [countries, setCountries] = useState([]);
   const { handleSubmit, register, control } = useForm();
   const term = useWatch({ control, name: "term" });
@@ -16,8 +19,11 @@ const CandidateRegistration = () => {
       .then((data) => setCountries(data));
   }, []);
 
+  const [postUser, { isLoading, isError }] = useRegisterMutation();
+
   const onSubmit = (data) => {
-    console.log(data);
+    console.log({ ...data, role: 'candidate' });
+    postUser({ ...data, role: 'candidate' });
   };
 
   return (
@@ -51,7 +57,7 @@ const CandidateRegistration = () => {
             <label className='mb-2' htmlFor='email'>
               Email
             </label>
-            <input type='email' id='email' {...register("email")} />
+            <input type='email' id='email' {...register("email")} value={email} />
           </div>
           <div className='flex flex-col w-full max-w-xs'>
             <h1 className='mb-3'>Gender</h1>

@@ -1,15 +1,30 @@
 import React, { useEffect } from "react";
 import { useForm } from "react-hook-form";
-
+import { useDispatch, useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import loginImage from "../assets/login.svg";
+import { googleSignIn, userLogin } from "../features/app/authSlice";
+
 const Login = () => {
   const { register, handleSubmit, reset } = useForm();
   const navigate = useNavigate();
+  const dispatch = useDispatch();
+  const { email, isLoading } = useSelector(state => state.auth);
 
-  const onSubmit = (data) => {
-    console.log(data);
+  const onSubmit = ({ email, password }) => {
+    dispatch(userLogin({ email, password }));
   };
+
+  useEffect(() => {
+    if (!isLoading && email) {
+      navigate('/');
+    }
+  }, [email, isLoading, navigate])
+
+  const handleGoogleSignUp = () => {
+    console.log("google sign up process");
+    dispatch(googleSignIn())
+  }
 
   return (
     <div className='flex h-screen items-center'>
@@ -55,6 +70,15 @@ const Login = () => {
                     Sign up
                   </span>
                 </p>
+              </div>
+              <div className='relative !mt-3'>
+                <button
+                  onClick={handleGoogleSignUp}
+                  type='submit'
+                  className='font-bold text-white py-3 rounded-full bg-primary w-full'
+                >
+                  Login With Google
+                </button>
               </div>
             </div>
           </form>
