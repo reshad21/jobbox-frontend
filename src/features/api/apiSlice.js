@@ -52,6 +52,23 @@ export const apiSlice = createApi({
       }),
       // invalidatesTags: ['jobs'],
     }),
+    question: builder.mutation({
+      query: (data) => ({
+        method: "PATCH",
+        url: "/query",
+        body: data,
+        headers: {
+          'Content-type': 'application/json; charset=UTF-8',
+        },
+      }),
+      // invalidatesTags: ['jobs'],
+    }),
+
+    getAppliedJobs: builder.query({
+      query: (email) => ({
+        url: `/applied-jobs/${email}`,
+      }),
+    }),
 
     getJobs: builder.query({
       query: () => ({
@@ -69,4 +86,4 @@ export const apiSlice = createApi({
   }),
 })
 
-export const { useRegisterMutation, usePostJobMutation, useGetJobsQuery, useJobByIdQuery, useApplyJobMutation } = apiSlice;
+export const { useRegisterMutation, usePostJobMutation, useGetJobsQuery, useJobByIdQuery, useApplyJobMutation, useGetAppliedJobsQuery, useQuestionMutation } = apiSlice;
