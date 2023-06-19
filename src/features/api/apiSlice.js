@@ -6,7 +6,7 @@ export const apiSlice = createApi({
   reducerPath: 'api',
   baseQuery: fetchBaseQuery({ baseUrl: 'http://localhost:5000' }),
   // endpoints: (builder) => ({})
-  tagTypes: ['jobs'],
+  tagTypes: ['jobs', 'job'],
   endpoints: (builder) => ({
     // auth api
     register: builder.mutation({
@@ -61,7 +61,18 @@ export const apiSlice = createApi({
           'Content-type': 'application/json; charset=UTF-8',
         },
       }),
-      // invalidatesTags: ['jobs'],
+      invalidatesTags: ['job'],
+    }),
+    reply: builder.mutation({
+      query: (data) => ({
+        method: "PATCH",
+        url: "/reply",
+        body: data,
+        headers: {
+          'Content-type': 'application/json; charset=UTF-8',
+        },
+      }),
+      invalidatesTags: ['job'],
     }),
 
     getAppliedJobs: builder.query({
@@ -81,9 +92,10 @@ export const apiSlice = createApi({
       query: (id) => ({
         url: `/job/${id}`,
       }),
+      providesTags: ['job'],
     }),
 
   }),
 })
 
-export const { useRegisterMutation, usePostJobMutation, useGetJobsQuery, useJobByIdQuery, useApplyJobMutation, useGetAppliedJobsQuery, useQuestionMutation } = apiSlice;
+export const { useRegisterMutation, usePostJobMutation, useGetJobsQuery, useJobByIdQuery, useApplyJobMutation, useGetAppliedJobsQuery, useQuestionMutation, useReplyMutation } = apiSlice;
